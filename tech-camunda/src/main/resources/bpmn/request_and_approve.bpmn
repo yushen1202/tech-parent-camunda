@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1pkt7bp" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.21.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="request_and_approve" isExecutable="true">
+    <bpmn:startEvent id="startRaiseAndRequestProcess">
+      <bpmn:outgoing>Flow_05psqvg</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_05psqvg" sourceRef="startRaiseAndRequestProcess" targetRef="RaiseRequestTask" />
+    <bpmn:userTask id="RaiseRequestTask" name="Raise Request">
+      <bpmn:incoming>Flow_05psqvg</bpmn:incoming>
+      <bpmn:outgoing>Flow_1863qk5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="approveTask" name="Approve">
+      <bpmn:incoming>Flow_1863qk5</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mxs3gw</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1863qk5" sourceRef="RaiseRequestTask" targetRef="approveTask" />
+    <bpmn:sequenceFlow id="Flow_0mxs3gw" sourceRef="approveTask" targetRef="endRaiseAndRequestProcess" />
+    <bpmn:endEvent id="endRaiseAndRequestProcess">
+      <bpmn:incoming>Flow_0mxs3gw</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="request_and_approve">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="startRaiseAndRequestProcess">
+        <dc:Bounds x="152" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0n96lmh_di" bpmnElement="RaiseRequestTask">
+        <dc:Bounds x="290" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07m9h3k_di" bpmnElement="approveTask">
+        <dc:Bounds x="500" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0a8ymar_di" bpmnElement="endRaiseAndRequestProcess">
+        <dc:Bounds x="692" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_05psqvg_di" bpmnElement="Flow_05psqvg">
+        <di:waypoint x="188" y="117" />
+        <di:waypoint x="290" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1863qk5_di" bpmnElement="Flow_1863qk5">
+        <di:waypoint x="390" y="117" />
+        <di:waypoint x="500" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mxs3gw_di" bpmnElement="Flow_0mxs3gw">
+        <di:waypoint x="600" y="117" />
+        <di:waypoint x="692" y="117" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
