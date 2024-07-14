@@ -1,4 +1,4 @@
-package org.tech.camunda.demo.controller;
+package org.tech.camunda.demo.CamundaBasicDemo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

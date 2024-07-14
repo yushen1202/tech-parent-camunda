@@ -1,4 +1,4 @@
-package org.tech.camunda.demo.controller;
+package org.tech.camunda.demo.vacationRequestDemo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,23 +46,23 @@ public class VacationRequestController {
          */
         Map<String, Object> map1 = new HashMap<>();
         map1.put("days", 1);
-        ProcessInstance instance1 = runtimeService.startProcessInstanceByKey("VacationRequestProcess", "id_1001", map1);
+        ProcessInstance instance1 = runtimeService.startProcessInstanceByKey("vacation_request_process", "id_1001", map1);
 
         Map<String, Object> map2 = new HashMap<>();
         map2.put("days", 3);
-        ProcessInstance instance2 = runtimeService.startProcessInstanceByKey("VacationRequestProcess", "id_1002", map2);
+        ProcessInstance instance2 = runtimeService.startProcessInstanceByKey("vacation_request_process", "id_1002", map2);
 
         String instance1Id = instance1.getId();
         String instance2Id = instance2.getId();
 
         List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
 
-        ProcessInstance instance1Queried = runtimeService.createProcessInstanceQuery().processDefinitionKey("VacationRequestProcess").processInstanceBusinessKey("id_1001").singleResult();
-        ProcessInstance instance2Queried = runtimeService.createProcessInstanceQuery().processDefinitionKey("VacationRequestProcess").processInstanceBusinessKey("id_1002").singleResult();
+        ProcessInstance instance1Queried = runtimeService.createProcessInstanceQuery().processDefinitionKey("vacation_request_process").processInstanceBusinessKey("id_1001").singleResult();
+        ProcessInstance instance2Queried = runtimeService.createProcessInstanceQuery().processDefinitionKey("vacation_request_process").processInstanceBusinessKey("id_1002").singleResult();
 
         List<Task> stage1AllTaskList1 = taskService.createTaskQuery().list();
-        List<Task> stage1Instance1Tasks = taskService.createTaskQuery().processDefinitionKey("VacationRequestProcess").processInstanceBusinessKey("id_1001").list();
-        List<Task> stage1Instance2Tasks = taskService.createTaskQuery().processDefinitionKey("VacationRequestProcess").processInstanceBusinessKey("id_1002").list();
+        List<Task> stage1Instance1Tasks = taskService.createTaskQuery().processDefinitionKey("vacation_request_process").processInstanceBusinessKey("id_1001").list();
+        List<Task> stage1Instance2Tasks = taskService.createTaskQuery().processDefinitionKey("vacation_request_process").processInstanceBusinessKey("id_1002").list();
 
         stage1Instance1Tasks.stream().forEach(t -> {
             log.info("pause here");
@@ -83,8 +83,8 @@ public class VacationRequestController {
                 .singleResult();
 
         List<Task> stage2AllTaskList1 = taskService.createTaskQuery().list();
-        List<Task> stage2Instance1Tasks = taskService.createTaskQuery().processDefinitionKey("VacationRequestProcess").processInstanceBusinessKey("id_1001").list();
-        List<Task> stage2Instance2Tasks = taskService.createTaskQuery().processDefinitionKey("VacationRequestProcess").processInstanceBusinessKey("id_1002").list();
+        List<Task> stage2Instance1Tasks = taskService.createTaskQuery().processDefinitionKey("vacation_request_process").processInstanceBusinessKey("id_1001").list();
+        List<Task> stage2Instance2Tasks = taskService.createTaskQuery().processDefinitionKey("vacation_request_process").processInstanceBusinessKey("id_1002").list();
 
         stage2Instance1Tasks.stream().forEach(t -> {
             log.info("pause here");
