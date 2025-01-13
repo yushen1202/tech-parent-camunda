@@ -1,4 +1,4 @@
-package org.tech.camunda.demo.approveDecisionDemo;
+package org.tech.camunda.demo._02.decisionTreeDemo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,12 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+/**
+ * This demo is to demonstrate the usage of decision tree in a workflow
+ */
 @RestController
-@RequestMapping("/demo/approveDecisionDemo")
+@RequestMapping("/_02")
 @Tag(name = "default", description = "default group")
 @Slf4j
-public class ApproveDecisionController {
+public class DecisionTreeDemoController {
 
     @Autowired
     TaskService taskService;
@@ -37,54 +41,42 @@ public class ApproveDecisionController {
     @Autowired
     DecisionService decisionService;
 
-    @Autowired
-    IdentityService identityService;
-
-    @Autowired
-    FormService formService;
-
-    @Autowired
-    HistoryService historyService;
-
-    @Autowired
-    ManagementService managementService;
-
-    @Autowired
-    FilterService filterService;
-
-    @Autowired
-    ExternalTaskService externalTaskService;
-
-    @Autowired
-    CaseService caseService;
-
     @RequestMapping(path = "/approveDecision", method = RequestMethod.GET)
     @Operation
     public void approveDecision() {
+
+        /*
+         * Clear existing process instances
+         */
+        List<ProcessInstance> processInstances = runtimeService.createProcessInstanceQuery().processDefinitionKey("decision_tree").list();
+        Optional.ofNullable(processInstances).get().stream().forEach(pi -> {
+            runtimeService.deleteProcessInstance(pi.getProcessInstanceId(), "");
+        });
+
         Map<String, Object> map1 = new HashMap<>();
         map1.put("amount", 1000);
-        ProcessInstance instance1 = runtimeService.startProcessInstanceByKey("dicision_tree_process", "id_1001", map1);
+        ProcessInstance instance1 = runtimeService.startProcessInstanceByKey("decision_tree", "id_1001", map1);
 
         Map<String, Object> map2 = new HashMap<>();
         map1.put("amount", 1000);
-        ProcessInstance instance2 = runtimeService.startProcessInstanceByKey("dicision_tree_process", "id_1002", map1);
+        ProcessInstance instance2 = runtimeService.startProcessInstanceByKey("decision_tree", "id_1002", map1);
 
         Map<String, Object> map3 = new HashMap<>();
         map1.put("amount", 10000);
         map1.put("role", "HR");
         map1.put("useFor", "computer");
-        ProcessInstance instance3 = runtimeService.startProcessInstanceByKey("dicision_tree_process", "id_1003", map1);
+        ProcessInstance instance3 = runtimeService.startProcessInstanceByKey("decision_tree", "id_1003", map1);
 
         Map<String, Object> map4 = new HashMap<>();
         map1.put("amount", 10000);
         map1.put("role", "Tech");
         map1.put("useFor", "computer");
-        ProcessInstance instance4 = runtimeService.startProcessInstanceByKey("dicision_tree_process", "id_1004", map1);
+        ProcessInstance instance4 = runtimeService.startProcessInstanceByKey("decision_tree", "id_1004", map1);
 
-        List<Task> stage1Instance1Tasks = taskService.createTaskQuery().processDefinitionKey("dicision_tree_process").processInstanceBusinessKey("id_1001").list();
-        List<Task> stage1Instance2Tasks = taskService.createTaskQuery().processDefinitionKey("dicision_tree_process").processInstanceBusinessKey("id_1002").list();
-        List<Task> stage1Instance3Tasks = taskService.createTaskQuery().processDefinitionKey("dicision_tree_process").processInstanceBusinessKey("id_1003").list();
-        List<Task> stage1Instance4Tasks = taskService.createTaskQuery().processDefinitionKey("dicision_tree_process").processInstanceBusinessKey("id_1004").list();
+        List<Task> stage1Instance1Tasks = taskService.createTaskQuery().processDefinitionKey("decision_tree").processInstanceBusinessKey("id_1001").list();
+        List<Task> stage1Instance2Tasks = taskService.createTaskQuery().processDefinitionKey("decision_tree").processInstanceBusinessKey("id_1002").list();
+        List<Task> stage1Instance3Tasks = taskService.createTaskQuery().processDefinitionKey("decision_tree").processInstanceBusinessKey("id_1003").list();
+        List<Task> stage1Instance4Tasks = taskService.createTaskQuery().processDefinitionKey("decision_tree").processInstanceBusinessKey("id_1004").list();
 
         stage1Instance1Tasks.stream().forEach(t -> {
             log.info("pause here");
@@ -106,10 +98,10 @@ public class ApproveDecisionController {
             taskService.complete(t.getId());
         });
 
-        List<Task> stage2Instance1Tasks = taskService.createTaskQuery().processDefinitionKey("dicision_tree_process").processInstanceBusinessKey("id_1001").list();
-        List<Task> stage2Instance2Tasks = taskService.createTaskQuery().processDefinitionKey("dicision_tree_process").processInstanceBusinessKey("id_1002").list();
-        List<Task> stage2Instance3Tasks = taskService.createTaskQuery().processDefinitionKey("dicision_tree_process").processInstanceBusinessKey("id_1003").list();
-        List<Task> stage2Instance4Tasks = taskService.createTaskQuery().processDefinitionKey("dicision_tree_process").processInstanceBusinessKey("id_1004").list();
+        List<Task> stage2Instance1Tasks = taskService.createTaskQuery().processDefinitionKey("decision_tree").processInstanceBusinessKey("id_1001").list();
+        List<Task> stage2Instance2Tasks = taskService.createTaskQuery().processDefinitionKey("decision_tree").processInstanceBusinessKey("id_1002").list();
+        List<Task> stage2Instance3Tasks = taskService.createTaskQuery().processDefinitionKey("decision_tree").processInstanceBusinessKey("id_1003").list();
+        List<Task> stage2Instance4Tasks = taskService.createTaskQuery().processDefinitionKey("decision_tree").processInstanceBusinessKey("id_1004").list();
 
         log.info("pause here");
     }

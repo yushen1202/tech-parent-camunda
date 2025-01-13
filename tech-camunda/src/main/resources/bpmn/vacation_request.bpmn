@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0k1xycv" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.21.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
-  <bpmn:process id="vacation_request_process" isExecutable="true">
+  <bpmn:process id="vacation_request" name="vacation_request" isExecutable="true">
     <bpmn:extensionElements />
     <bpmn:startEvent id="StartVacationRequest">
       <bpmn:outgoing>Flow_18ie9mz</bpmn:outgoing>
@@ -54,7 +54,7 @@
     </bpmn:parallelGateway>
     <bpmn:sequenceFlow id="Flow_18tw16x" sourceRef="DirectManagerApproveTask" targetRef="Gateway_1xitzj1" />
     <bpmn:sequenceFlow id="Flow_04ldyt1" sourceRef="HrApproveTask" targetRef="EndParallel" />
-    <bpmn:serviceTask id="ArchivedTask" name="Archived" camunda:class="org.tech.camunda.demo.vacationRequestDemo.CamundaDemoService">
+    <bpmn:serviceTask id="ArchivedTask" name="Archived" camunda:class="org.tech.camunda.demo._01.vacationRequestDemo.CamundaDelegateService">
       <bpmn:extensionElements />
       <bpmn:incoming>Flow_1ac3ntb</bpmn:incoming>
       <bpmn:outgoing>Flow_127346z</bpmn:outgoing>
@@ -64,7 +64,7 @@
       <bpmn:incoming>Flow_127346z</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_127346z" sourceRef="ArchivedTask" targetRef="EndVacationRequest" />
-    <bpmn:serviceTask id="InformServiceTask" name="Inform Service Task" camunda:class="org.tech.camunda.demo.vacationRequestDemo.CamundaDemoService">
+    <bpmn:serviceTask id="InformServiceTask" name="Inform Service Task" camunda:class="org.tech.camunda.demo._01.vacationRequestDemo.CamundaDelegateService">
       <bpmn:incoming>Flow_04qyu3x</bpmn:incoming>
       <bpmn:outgoing>Flow_0awao42</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -80,7 +80,7 @@
     </bpmn:inclusiveGateway>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="vacation_request_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="vacation_request">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartVacationRequest">
         <dc:Bounds x="179" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>

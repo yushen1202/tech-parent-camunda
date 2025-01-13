@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0fgvuw7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.21.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="end_event_comparison" name="end_event_comparison" isExecutable="true" camunda:historyTimeToLive="365">
+    <bpmn:startEvent id="start_process" name="start process">
+      <bpmn:outgoing>Flow_1qd6aas</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_0ei1mdx">
+      <bpmn:incoming>Flow_1qd6aas</bpmn:incoming>
+      <bpmn:outgoing>sub_processend</bpmn:outgoing>
+      <bpmn:outgoing>non_sub_process_end</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1qd6aas" sourceRef="start_process" targetRef="Gateway_0ei1mdx" />
+    <bpmn:sequenceFlow id="sub_processend" name="sub process end" sourceRef="Gateway_0ei1mdx" targetRef="Gateway_1lpdd42">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isSubProcessType==true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:parallelGateway id="Gateway_1lpdd42">
+      <bpmn:incoming>sub_processend</bpmn:incoming>
+      <bpmn:outgoing>test_end_event</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0288ocy</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="test_end_event" name="test end event" sourceRef="Gateway_1lpdd42" targetRef="sub_process_user_task_A" />
+    <bpmn:endEvent id="sub_process_normal_end" name="sub process normal end">
+      <bpmn:incoming>Flow_0mrlzga</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="sub_process_terminated_end" name="sub process terminated end">
+      <bpmn:incoming>Flow_1yji56y</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_09e83wn" />
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="trigger_sub_process_service_task" name="trigger sub process service task" camunda:asyncBefore="true" camunda:class="org.tech.camunda.demo._03.endEventComparisonDemo.TriggerSubProcessDelegate">
+      <bpmn:incoming>Flow_0288ocy</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1853t0y" attachedToRef="sub_process_user_task_A">
+      <bpmn:outgoing>Flow_1x2igfo</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_0pmv3n8" camunda:variableEvents="create,update">
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">${triggerSubProcessTerminateEndEvent==true}</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="non_sub_process_end" name="non sub process end" sourceRef="Gateway_0ei1mdx" targetRef="non_sub_process_user_task">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isSubProcessType==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="normal_end_event" name="normal end event">
+      <bpmn:incoming>Flow_13388f0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0h343we" sourceRef="sub_process_user_task_A" targetRef="sub_process_normal_end_service_task" />
+    <bpmn:sequenceFlow id="Flow_0mrlzga" sourceRef="sub_process_normal_end_service_task" targetRef="sub_process_normal_end" />
+    <bpmn:serviceTask id="sub_process_normal_end_service_task" name="sub process normal end service task" camunda:class="org.tech.camunda.demo._03.endEventComparisonDemo.SubProcessNormalEndDelegate">
+      <bpmn:incoming>Flow_0h343we</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mrlzga</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1x2igfo" sourceRef="Event_1853t0y" targetRef="sub_process_terminated_end_service_task" />
+    <bpmn:serviceTask id="sub_process_terminated_end_service_task" name="sub process terminated end service task" camunda:class="org.tech.camunda.demo._03.endEventComparisonDemo.SubProcessTerminatedEndDelegate">
+      <bpmn:incoming>Flow_1x2igfo</bpmn:incoming>
+      <bpmn:outgoing>Flow_1yji56y</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1yji56y" sourceRef="sub_process_terminated_end_service_task" targetRef="sub_process_terminated_end" />
+    <bpmn:userTask id="non_sub_process_user_task" name="non sub process user task">
+      <bpmn:incoming>non_sub_process_end</bpmn:incoming>
+      <bpmn:outgoing>Flow_13t1jhp</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="Event_14efyst" attachedToRef="non_sub_process_user_task">
+      <bpmn:outgoing>Flow_1gqz16o</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_0uhqr8a" camunda:variableEvents="create,update">
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">${triggerNonSubProcessTerminateEndEvent==true}</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="Event_1il6jlw">
+      <bpmn:incoming>Flow_1brsvsl</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_0akbqor" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_13t1jhp" sourceRef="non_sub_process_user_task" targetRef="non_sub_process_terminated_end_service_task" />
+    <bpmn:sequenceFlow id="Flow_13388f0" sourceRef="non_sub_process_terminated_end_service_task" targetRef="normal_end_event" />
+    <bpmn:sequenceFlow id="Flow_1gqz16o" sourceRef="Event_14efyst" targetRef="non_sub_process_normal_end_service_task" />
+    <bpmn:sequenceFlow id="Flow_1brsvsl" sourceRef="non_sub_process_normal_end_service_task" targetRef="Event_1il6jlw" />
+    <bpmn:serviceTask id="non_sub_process_normal_end_service_task" name="non sub process terminated end service task" camunda:class="org.tech.camunda.demo._03.endEventComparisonDemo.NonSubProcessTerminatedEndDelegate">
+      <bpmn:incoming>Flow_1gqz16o</bpmn:incoming>
+      <bpmn:outgoing>Flow_1brsvsl</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="non_sub_process_terminated_end_service_task" name="non sub process normal end service task" camunda:class="org.tech.camunda.demo._03.endEventComparisonDemo.NonSubProcessNormalEndDelegate">
+      <bpmn:incoming>Flow_13t1jhp</bpmn:incoming>
+      <bpmn:outgoing>Flow_13388f0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="sub_process_user_task_A" name="sub process user task A">
+      <bpmn:incoming>test_end_event</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h343we</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0288ocy" sourceRef="Gateway_1lpdd42" targetRef="trigger_sub_process_service_task" />
+    <bpmn:subProcess id="the_sub_process" name="the sub process" triggeredByEvent="true">
+      <bpmn:userTask id="sub_process_usertask_B" name="sub process user task B">
+        <bpmn:incoming>Flow_0so15xk</bpmn:incoming>
+        <bpmn:outgoing>Flow_1jo9k03</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:endEvent id="sub_process_end" name="sub process end">
+        <bpmn:incoming>Flow_1jo9k03</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0so15xk" sourceRef="start_sub_process" targetRef="sub_process_usertask_B" />
+      <bpmn:sequenceFlow id="Flow_1jo9k03" sourceRef="sub_process_usertask_B" targetRef="sub_process_end" />
+      <bpmn:startEvent id="start_sub_process" name="start sub process" isInterrupting="false">
+        <bpmn:outgoing>Flow_0so15xk</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_15qr50v" messageRef="Message_319p755" />
+      </bpmn:startEvent>
+    </bpmn:subProcess>
+    <bpmn:textAnnotation id="TextAnnotation_0mq6ize">
+      <bpmn:text>Start a sub process</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0f70q3h" associationDirection="None" sourceRef="trigger_sub_process_service_task" targetRef="TextAnnotation_0mq6ize" />
+    <bpmn:textAnnotation id="TextAnnotation_0scblnq">
+      <bpmn:text>Confirm whether a normal end event terminates a sub process</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0mhjhwq" associationDirection="None" sourceRef="sub_process_normal_end" targetRef="TextAnnotation_0scblnq" />
+    <bpmn:textAnnotation id="TextAnnotation_1ffsoyf">
+      <bpmn:text>Confirm whether a terminate end event terminates a sub process</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_19d74ni" associationDirection="None" sourceRef="sub_process_terminated_end" targetRef="TextAnnotation_1ffsoyf" />
+  </bpmn:process>
+  <bpmn:message id="Message_319p755" name="start_sub_process_message" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="end_event_comparison">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="start_process">
+        <dc:Bounds x="179" y="229" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="166" y="272" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ei1mdx_di" bpmnElement="Gateway_0ei1mdx" isMarkerVisible="true">
+        <dc:Bounds x="265" y="222" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0odveln_di" bpmnElement="Gateway_1lpdd42">
+        <dc:Bounds x="265" y="425" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_17y66is_di" bpmnElement="sub_process_normal_end">
+        <dc:Bounds x="772" y="612" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="762" y="655" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_02wxhlh_di" bpmnElement="sub_process_terminated_end">
+        <dc:Bounds x="772" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="758" y="825" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09se65f_di" bpmnElement="trigger_sub_process_service_task">
+        <dc:Bounds x="580" y="410" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_047pi2m_di" bpmnElement="normal_end_event">
+        <dc:Bounds x="772" y="229" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="749" y="272" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_130orel_di" bpmnElement="sub_process_normal_end_service_task">
+        <dc:Bounds x="580" y="590" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0efgpg0_di" bpmnElement="sub_process_terminated_end_service_task">
+        <dc:Bounds x="580" y="760" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ly20yh_di" bpmnElement="non_sub_process_user_task">
+        <dc:Bounds x="410" y="207" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_09xbvaf_di" bpmnElement="Event_1il6jlw">
+        <dc:Bounds x="772" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08zhnjz_di" bpmnElement="non_sub_process_normal_end_service_task">
+        <dc:Bounds x="580" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0bo430f_di" bpmnElement="non_sub_process_terminated_end_service_task">
+        <dc:Bounds x="580" y="207" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03j9xhg_di" bpmnElement="sub_process_user_task_A">
+        <dc:Bounds x="410" y="590" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xmhqyn_di" bpmnElement="the_sub_process" isExpanded="true">
+        <dc:Bounds x="890" y="350" width="400" height="170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_19vckog_di" bpmnElement="sub_process_usertask_B">
+        <dc:Bounds x="1020" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1v66big_di" bpmnElement="sub_process_end">
+        <dc:Bounds x="1182" y="412" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1162" y="455" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0bui0m1_di" bpmnElement="start_sub_process">
+        <dc:Bounds x="930" y="412" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="907" y="455" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0so15xk_di" bpmnElement="Flow_0so15xk">
+        <di:waypoint x="966" y="430" />
+        <di:waypoint x="1020" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jo9k03_di" bpmnElement="Flow_1jo9k03">
+        <di:waypoint x="1120" y="430" />
+        <di:waypoint x="1182" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0mq6ize_di" bpmnElement="TextAnnotation_0mq6ize">
+        <dc:Bounds x="700" y="380" width="120" height="26" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0scblnq_di" bpmnElement="TextAnnotation_0scblnq">
+        <dc:Bounds x="825" y="550" width="210" height="45" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1ffsoyf_di" bpmnElement="TextAnnotation_1ffsoyf">
+        <dc:Bounds x="830" y="702" width="200" height="48" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14efyst_di" bpmnElement="Event_14efyst">
+        <dc:Bounds x="452" y="189" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1853t0y_di" bpmnElement="Event_1853t0y">
+        <dc:Bounds x="442" y="652" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1qd6aas_di" bpmnElement="Flow_1qd6aas">
+        <di:waypoint x="215" y="247" />
+        <di:waypoint x="265" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pda1fl_di" bpmnElement="sub_processend">
+        <di:waypoint x="290" y="272" />
+        <di:waypoint x="290" y="425" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="294" y="335" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1oswi0b_di" bpmnElement="test_end_event">
+        <di:waypoint x="290" y="475" />
+        <di:waypoint x="290" y="630" />
+        <di:waypoint x="410" y="630" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="295" y="543" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jbckwm_di" bpmnElement="non_sub_process_end">
+        <di:waypoint x="315" y="247" />
+        <di:waypoint x="410" y="247" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="323" y="221" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h343we_di" bpmnElement="Flow_0h343we">
+        <di:waypoint x="510" y="630" />
+        <di:waypoint x="580" y="630" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mrlzga_di" bpmnElement="Flow_0mrlzga">
+        <di:waypoint x="680" y="630" />
+        <di:waypoint x="772" y="630" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1x2igfo_di" bpmnElement="Flow_1x2igfo">
+        <di:waypoint x="460" y="688" />
+        <di:waypoint x="460" y="800" />
+        <di:waypoint x="580" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yji56y_di" bpmnElement="Flow_1yji56y">
+        <di:waypoint x="680" y="800" />
+        <di:waypoint x="772" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13t1jhp_di" bpmnElement="Flow_13t1jhp">
+        <di:waypoint x="510" y="247" />
+        <di:waypoint x="580" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13388f0_di" bpmnElement="Flow_13388f0">
+        <di:waypoint x="680" y="247" />
+        <di:waypoint x="772" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gqz16o_di" bpmnElement="Flow_1gqz16o">
+        <di:waypoint x="470" y="189" />
+        <di:waypoint x="470" y="120" />
+        <di:waypoint x="580" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1brsvsl_di" bpmnElement="Flow_1brsvsl">
+        <di:waypoint x="680" y="120" />
+        <di:waypoint x="772" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0288ocy_di" bpmnElement="Flow_0288ocy">
+        <di:waypoint x="315" y="450" />
+        <di:waypoint x="580" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0f70q3h_di" bpmnElement="Association_0f70q3h">
+        <di:waypoint x="680" y="428" />
+        <di:waypoint x="728" y="406" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0mhjhwq_di" bpmnElement="Association_0mhjhwq">
+        <di:waypoint x="804" y="619" />
+        <di:waypoint x="838" y="595" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_19d74ni_di" bpmnElement="Association_19d74ni">
+        <di:waypoint x="804" y="788" />
+        <di:waypoint x="848" y="750" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,11 +1,9 @@
-package org.tech.camunda.demo.CamundaBasicDemo;
+package org.tech.camunda.demo._00.requestAndApproveDemo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.engine.RepositoryService;
-import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
@@ -18,16 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This demo is to demonstrate the basic usage of Camunda
+ */
 @RestController
-@RequestMapping("/demo")
+@RequestMapping("/_00")
 @Tag(name = "default", description = "default group")
 @Slf4j
-public class CamundaBasicDemoController {
+public class RequestAndApproveDemoController {
 
-    /**
-     * Services API
-     * https://docs.camunda.org/manual/latest/user-guide/process-engine/process-engine-api/
-     */
     @Autowired
     TaskService taskService;
 
@@ -40,11 +37,6 @@ public class CamundaBasicDemoController {
     @RequestMapping(path = "/requestAndApprove", method = RequestMethod.GET)
     @Operation
     public void requestAndApprove() {
-
-        /*
-         * process definition
-         * see Modeler application and /resources/bpmn folder
-         */
 
         /*
          * Start process

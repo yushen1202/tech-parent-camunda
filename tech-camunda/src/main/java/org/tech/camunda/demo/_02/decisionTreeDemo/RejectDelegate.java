@@ -1,4 +1,4 @@
-package org.tech.camunda.demo.approveDecisionDemo;
+package org.tech.camunda.demo._02.decisionTreeDemo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
